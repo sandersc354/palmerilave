@@ -1,3 +1,0 @@
-Coloca aquí tus 22 portadas JPG.
-Usa exactamente los nombres de archivo indicados en index.html.
-Ejemplo: 1ro-primaria-ciencias.jpg
