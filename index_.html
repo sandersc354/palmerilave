@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biblioteca Virtual Palmer</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7f5;color:#173b2b}
+header{background:linear-gradient(135deg,#176b43,#0d4d30);color:white;text-align:center;padding:34px 20px}
+header h1{margin:0;font-size:32px} header p{margin:8px 0 0;opacity:.9}
+.container{max-width:1100px;margin:30px auto;padding:0 20px}
+.levels,.subfilters{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+button{border:0;border-radius:10px;padding:12px 22px;font-size:16px;font-weight:bold;cursor:pointer;transition:.2s}
+.level-btn{background:#dfe9e3;color:#173b2b} .level-btn.active{background:#176b43;color:white}
+.subfilters{display:flex} .filter-btn{background:#fff;border:1px solid #d4ddd7;color:#365044}
+.filter-btn.active{background:#f28b32;color:white;border-color:#f28b32}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+.card{background:white;border-radius:16px;overflow:hidden;box-shadow:0 5px 18px rgba(0,0,0,.08);border:1px solid #e1e8e3;transition:.2s}
+.card:hover{transform:translateY(-3px);box-shadow:0 9px 25px rgba(0,0,0,.12)}
+.cover{width:100%;aspect-ratio:210/297;object-fit:cover;display:block}
+.info{padding:17px} .badges{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:9px}
+.badge{font-size:12px;font-weight:bold;padding:5px 9px;border-radius:20px;background:#e8f3ed;color:#176b43}
+.badge.letters{background:#fff0e3;color:#c96718}
+.info h2{margin:5px 0 7px;font-size:21px} .info p{margin:0 0 14px;color:#68766f}
+.drive{display:inline-block;text-decoration:none;background:#176b43;color:white;padding:10px 15px;border-radius:9px;font-weight:bold}
+.drive:hover{background:#0d4d30}
+@media(max-width:650px){
+.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.info{padding:10px} .info h2{font-size:15px} .info p{font-size:12px;margin-bottom:9px}
+.drive{font-size:11px;padding:8px 9px} .badge{font-size:9px;padding:4px 6px} header h1{font-size:24px}
+}
+</style>
+</head>
+<body>
+<header>
+<h1>📚 Biblioteca Virtual Palmer</h1>
+<p>Guías académicas de Ciencias y Letras</p>
+</header>
+<main class="container">
+<div class="levels">
+<button class="level-btn active" data-level="Primaria">Primaria</button>
+<button class="level-btn" data-level="Secundaria">Secundaria</button>
+</div>
+<div class="subfilters">
+<button class="filter-btn active" data-category="Ciencias">Ciencias</button>
+<button class="filter-btn" data-category="Letras">Letras</button>
+</div>
+<div class="grid" id="books"></div>
+</main>
+<script>
+const libros = [
+  {nivel:"Primaria", grado:"1ro de Primaria", area:"Ciencias", portada:"img/GUÍA PRIMARIA 1RO (CIENCIAS - BIMESTRE III)_portada_a4_optimizado.jpg", linkDrive:"https://drive.google.com/file/d/1Z4sXFtDA4Nuc-hWLbcxE7jPKDf6YDsCP/view?usp=sharing"},
+  {nivel:"Primaria", grado:"1ro de Primaria", area:"Letras", portada:"img/GUÍA PRIMARIA 1RO (LETRAS - BIMESTRE III)_portada_a4_optimizado.jpg", linkDrive:"https://drive.google.com/file/d/1YfKpC4IM5EPywPmEJGCmmeciJTB7YVeZ/view?usp=drive_link"},
+  {nivel:"Primaria", grado:"2do de Primaria", area:"Ciencias", portada:"img/GUÍA PRIMARIA 2DO (CIENCIAS - BIMESTRE III)_portada_a4_optimizado.jpg", linkDrive:"https://drive.google.com/file/d/1qrq4bvhRGWEq0EsSi6yJ76FlQh8jO_KD/view?usp=drive_link"},
+  {nivel:"Primaria", grado:"2do de Primaria", area:"Letras", portada:"img/GUÍA PRIMARIA 2DO (LETRAS - BIMESTRE III)_portada_a4_optimizado.jpg", linkDrive:"https://drive.google.com/file/d/1904iJ2cKcH_s-m4LG7ivjsQFzWJt3Amw/view?usp=drive_link"},
+  {nivel:"Primaria", grado:"3ro de Primaria", area:"Ciencias", portada:"img/GUÍA PRIMARIA 3RO (CIENCIAS - BIMESTRE III)_portada_a4_optimizado.jpg", linkDrive:"https://drive.google.com/file/d/1e_pD5aoNx4R09mNuBqfOHe4oDMQwh6_V/view?usp=drive_link"},
+  {nivel:"Primaria", grado:"3ro de Primaria", area:"Letras", portada:"img/GUÍA PRIMARIA 3RO (LETRAS - BIMESTRE III)_portada_a4_optimizado.jpg", linkDrive:"https://drive.google.com/file/d/13CqwaGbgG7r9ptWcUHj4GFJeOSCDmwVX/view?usp=drive_link"},
+  {nivel:"Primaria", grado:"4to de Primaria", area:"Ciencias", portada:"img/GUÍA PRIMARIA 4TO (CIENCIAS - BIMESTRE III)_portada_a4_optimizado.jpg", linkDrive:"https://drive.google.com/file/d/1Ak-bcstW_VqV0vWFActbmP56xeQQ4G1x/view?usp=drive_link"},
+  {nivel:"Primaria", grado:"4to de Primaria", area:"Letras", portada:"img/GUÍA PRIMARIA 4TO (LETRAS - BIMESTRE III)_portada_a4_optimizado.jpg", linkDrive:"https://drive.google.com/file/d/1yrRobIUC6Dv3B_p5PqFniKWZXRg1kG08/view?usp=drive_link"},
+  {nivel:"Primaria", grado:"5to de Primaria", area:"Ciencias", portada:"img/GUÍA PRIMARIA 5TO (CIENCIAS - BIMESTRE III)_portada_a4_optimizado.jpg", linkDrive:"https://drive.google.com/file/d/1dzK97bvVMprg5e2FqBslwDGPTBTri40y/view?usp=drive_link"},
+  {nivel:"Primaria", grado:"5to de Primaria", area:"Letras", portada:"img/GUÍA PRIMARIA 5TO (LETRAS - BIMESTRE III)_portada_a4_optimizado.jpg", linkDrive:"https://drive.google.com/file/d/1aqFAiMmErjqrMQQddnTxUDqIrYCsk-uS/view?usp=drive_link"},
+  {nivel:"Primaria", grado:"6to de Primaria", area:"Ciencias", portada:"img/GUÍA PRIMARIA 6TO (CIENCIAS - BIMESTRE III)_portada_a4_optimizado.jpg", linkDrive:"https://drive.google.com/file/d/1r-FztesjhFtb3A-jxetAXpH8NWCsZ5sb/view?usp=drive_link"},
+  {nivel:"Primaria", grado:"6to de Primaria", area:"Letras", portada:"img/GUÍA PRIMARIA 6TO (LETRAS - BIMESTRE III)_portada_a4_optimizado.jpg", linkDrive:"https://drive.google.com/file/d/1Z5aZe29Mm-Cw8alYofnW2j3bMS_5PO1q/view?usp=drive_link"},
+  {nivel:"Secundaria", grado:"1ro de Secundaria", area:"Ciencias", portada:"img/guía 1ro secundaria (CIENCIAS)_portada_a4_optimizado.jpg", linkDrive:"PEGAR_AQUI_EL_LINK_DE_GOOGLE_DRIVE"},
+  {nivel:"Secundaria", grado:"1ro de Secundaria", area:"Letras", portada:"img/guía 1ro secundaria (LETRAS)_portada_a4_optimizado.jpg", linkDrive:"https://drive.google.com/file/d/1sNxKc9joYivo9c4h2724Vdv8flMtD2aW/view?usp=drive_link"},
+  {nivel:"Secundaria", grado:"2do de Secundaria", area:"Ciencias", portada:"img/guía 2do secundaria (CIENCIAS)_portada_a4_optimizado.jpg", linkDrive:"PEGAR_AQUI_EL_LINK_DE_GOOGLE_DRIVE"},
+  {nivel:"Secundaria", grado:"2do de Secundaria", area:"Letras", portada:"img/guía 2do secundaria (LETRAS)_portada_a4_optimizado.jpg", linkDrive:"https://drive.google.com/file/d/1m7LniXiTGVea3jyHPOZXUGM3Ra3VkqiO/view?usp=drive_link"},
+  {nivel:"Secundaria", grado:"3ro de Secundaria", area:"Ciencias", portada:"img/guía 3ro secundaria (CIENCIAS)_portada_a4_optimizado.jpg", linkDrive:"PEGAR_AQUI_EL_LINK_DE_GOOGLE_DRIVE"},
+  {nivel:"Secundaria", grado:"3ro de Secundaria", area:"Letras", portada:"img/guía 3ro secundaria (LETRAS)_portada_a4_optimizado.jpg", linkDrive:"https://drive.google.com/file/d/1GwLeNn2Gxyb1mAFQgPztskASE2-aQmc_/view?usp=drive_link"},
+  {nivel:"Secundaria", grado:"4to de Secundaria", area:"Ciencias", portada:"img/4to-secundaria-ciencias.jpg", linkDrive:"PEGAR_AQUI_EL_LINK_DE_GOOGLE_DRIVE"},
+  {nivel:"Secundaria", grado:"4to de Secundaria", area:"Letras", portada:"img/4to-secundaria-letras.jpg", linkDrive:"PEGAR_AQUI_EL_LINK_DE_GOOGLE_DRIVE"},
+  {nivel:"Secundaria", grado:"5to de Secundaria", area:"Ciencias", portada:"img/5to-secundaria-ciencias.jpg", linkDrive:"PEGAR_AQUI_EL_LINK_DE_GOOGLE_DRIVE"},
+  {nivel:"Secundaria", grado:"5to de Secundaria", area:"Letras", portada:"img/5to-secundaria-letras.jpg", linkDrive:"PEGAR_AQUI_EL_LINK_DE_GOOGLE_DRIVE"}
+];
+
+let nivelActual="Primaria";
+let categoriaActual="Ciencias";
+
+function mostrarLibros(){
+ const contenedor=document.getElementById("books");
+ const filtrados=libros.filter(l=>l.nivel===nivelActual && l.area===categoriaActual);
+ contenedor.innerHTML=filtrados.map(l=>`
+ <article class="card">
+  <img class="cover" src="${l.portada}" alt="${l.grado} - ${l.area}">
+  <div class="info">
+   <div class="badges">
+    <span class="badge">${l.nivel}</span>
+    <span class="badge ${l.area==="Letras"?"letters":""}">${l.area}</span>
+   </div>
+   <h2>${l.grado}</h2>
+   <p>Guía académica de ${l.area}</p>
+   <a class="drive" href="${l.linkDrive}" target="_blank" rel="noopener">☁️ Abrir en Drive</a>
+  </div>
+ </article>`).join("");
+}
+document.querySelectorAll(".level-btn").forEach(btn=>btn.onclick=()=>{
+ document.querySelectorAll(".level-btn").forEach(b=>b.classList.remove("active"));
+ btn.classList.add("active"); nivelActual=btn.dataset.level; mostrarLibros();
+});
+document.querySelectorAll(".filter-btn").forEach(btn=>btn.onclick=()=>{
+ document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
+ btn.classList.add("active"); categoriaActual=btn.dataset.category; mostrarLibros();
+});
+mostrarLibros();
+</script>
+</body>
+</html>
